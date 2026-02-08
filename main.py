@@ -1,63 +1,83 @@
 from x_fast_trie import XFastTrie
 
-
 def main():
-    print("--- X-Fast Trie Initialization ---")
-    try:
-        w = int(input("Enter bit-width (e.g., 8 for 0-255, 32 for larger): "))
-    except ValueError:
-        print("Invalid width. Defaulting to 8.")
-        w = 8
+    import sys
 
-    trie = XFastTrie(w)
+    print("=== X-Fast Trie Interactive Menu ===")
+    trie = XFastTrie()
 
-    actions = {
-        '1': "Insert",
-        '2': "Delete",
-        '3': "Search (Exists?)",
-        '4': "Predecessor",
-        '5': "Successor",
-        '6': "Exit"
-    }
+    menu = """
+Choose an option:
+1. Insert a value
+2. Remove a value
+3. Find predecessor
+4. Find successor
+5. Show all values
+6. Show min and max
+7. Search for a value
+0. Exit
+"""
 
     while True:
-        print("\n" + "=" * 30)
-        for k, v in actions.items():
-            print(f"{k}. {v}")
-        choice = input("Select an option: ")
+        print(menu)
+        choice = input("Enter choice: ").strip()
 
-        if choice == '1':
-            val = int(input("Integer to insert: "))
-            if trie.insert(val):
-                print(f"Success: {val} inserted.")
-            else:
-                print(f"Failed: {val} is invalid or already exists.")
+        if choice == "1":
+            val = input("Enter value to insert: ").strip()
+            try:
+                trie.insert(int(val))
+                print(f"Inserted {val}")
+            except Exception as e:
+                print(f"Error: {e}")
 
-        elif choice == '2':
-            val = int(input("Integer to delete: "))
-            if trie.delete(val):
-                print(f"Success: {val} deleted.")
-            else:
-                print(f"Failed: {val} not found.")
+        elif choice == "2":
+            val = input("Enter value to remove: ").strip()
+            try:
+                trie.remove(int(val))
+                print(f"Removed {val}")
+            except Exception as e:
+                print(f"Error: {e}")
 
-        elif choice == '3':
-            val = int(input("Search for: "))
-            print(f"Result: {'Found' if trie.exists(val) else 'Not Found'}")
+        elif choice == "3":
+            val = input("Enter value to find predecessor for: ").strip()
+            try:
+                pred = trie.predecessor(int(val))
+                print(f"Predecessor: {pred}")
+            except Exception as e:
+                print(f"Error: {e}")
 
-        elif choice == '4':
-            val = int(input("Predecessor of: "))
-            print(f"Predecessor: {trie.predecessor(val)}")
+        elif choice == "4":
+            val = input("Enter value to find successor for: ").strip()
+            try:
+                succ = trie.successor(int(val))
+                print(f"Successor: {succ}")
+            except Exception as e:
+                print(f"Error: {e}")
 
-        elif choice == '5':
-            val = int(input("Successor of: "))
-            print(f"Successor: {trie.successor(val)}")
+        elif choice == "5":
+            print("Values in trie:", list(trie))
 
-        elif choice == '6':
-            print("Goodbye!")
-            break
+        elif choice == "6":
+            print(f"Min: {trie._min.value if trie._min else None}")
+            print(f"Max: {trie._max.value if trie._max else None}")
+
+        elif choice == "7":
+            val = input("Enter value to search for: ").strip()
+            try:
+                node = trie.search(int(val))
+                if node:
+                    print(f"Value {val} exists in the trie.")
+                else:
+                    print(f"Value {val} not found in the trie.")
+            except Exception as e:
+                print(f"Error: {e}")
+
+        elif choice == "0":
+            print("Exiting...")
+            sys.exit()
 
         else:
-            print("Invalid choice.")
+            print("Invalid choice! Please try again.")
 
 
 if __name__ == "__main__":
